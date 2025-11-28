@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sistema de contabilidad</title>
+    <title>Contabilidad móvil</title>
     <link rel="stylesheet" href="estilosCont.css" />
     </head>
     <body id="contabilidad">
     <header class="encabezado">
         <h1>Contabilidad de fajos</h1>
-        <p class="subtitulo">Visualiza y valida fajos y billetes sueltos</p>
+        
 
         <!-- Cantidad total fija -->
         <div class="barra-total">
@@ -34,90 +34,37 @@
     </header>
 
     <main class="contenedor">
-        <!-- Panel superior: contador -->
-        <section class="panel panel-calculo" id="panelCalculo">
-        <div class="tarjeta">
-            <div class="tarjeta-encabezado">
-            <h2>Desglose por denominación (faltante)</h2>
-            <span class="resumen-total" id="resumenTotal">Total: $0</span>
-            <span class="resumen-total" id="resumenFaltante">Faltante: $0</span>
-            </div>
-
-            <!-- SOLO bloque-fajo -->
-            <div class="lista-fajos" id="listaFajos">
-            <!-- Bloques generados dinámicamente desde JS -->
-            <!-- Ejemplo de bloque -->
-            <div class="bloque-fajo">
-                <div class="titulo">Denominación: $1000</div>
-                <div class="linea">
-                <span>Fajos (100):</span>
-                <input type="text" class="input" value="0" readonly />
-                </div>
-                <div class="linea">
-                <span>Billetes sueltos:</span>
-                <input type="text" class="input" value="0" readonly />
-                </div>
-                <div class="linea">
-                <span>Subtotal:</span>
-                <span class="subtotal-movil">$0</span>
-                </div>
-            </div>
-            </div>
-
-            <div class="tarjeta-pie">
-            <button id="btnLimpiar" class="btn btn-secundario">Limpiar</button>
-            </div>
+        <!-- Único formulario tipo tabla -->
+        <form id="formUnico" class="tabla-formulario" autocomplete="off">
+        <div class="tabla-encabezado">
+            <div class="celda encabezado">Denominaciones</div>
+            <div class="celda encabezado">Faltante</div>
+            <div class="celda encabezado">Validación manual</div>
         </div>
-        </section>
 
-        <!-- Panel inferior: manual -->
-        <section class="panel panel-manual" id="panelManual">
-        <div class="tarjeta">
-            <div class="tarjeta-encabezado">
-            <h2>Ingreso manual de fajos y sueltos</h2>
-            <span class="resumen-total" id="resumenManual">Aportado manual: $0</span>
-            </div>
-
-            <form id="formManual" class="form-cantidad" autocomplete="off">
-            <p class="ayuda">Ingresa fajos (100 billetes) y billetes sueltos por denominación.</p>
-            <button type="submit" class="btn btn-primario">Validar aportes</button>
-            </form>
-
-            <div class="lista-fajos" id="listaFajosManual">
-            <!-- Bloques generados dinámicamente -->
-            <div class="bloque-fajo">
-                <div class="titulo">Denominación: $1000</div>
-                <div class="linea">
-                <span>Fajos (100):</span>
-                <input type="number" min="0" step="1" value="0" class="input-fajo" data-denominacion="1000" />
-                </div>
-                <div class="linea">
-                <span>Billetes sueltos:</span>
-                <input type="number" min="0" step="1" value="0" class="input-suelto" data-denominacion="1000" />
-                </div>
-                <div class="linea">
-                <span>Subtotal:</span>
-                <span class="subtotal-movil" data-denominacion="1000">$0</span>
-                </div>
-            </div>
-            </div>
-
-            <div class="tarjeta-pie">
-            <button id="btnLimpiarManual" class="btn btn-secundario">Limpiar</button>
-            </div>
+        <div id="tablaDenominaciones" class="tabla-cuerpo">
+            <!-- Filas generadas dinámicamente por JS (una por denominación) -->
         </div>
-        </section>
+
+        <div class="tabla-pie">
+            <span id="resumenManual">Aportado manual: $0</span>
+            <button id="btnValidar" type="submit" class="btn btn-primario">Validar</button>
+            <button id="btnLimpiar" type="button" class="btn btn-secundario">Limpiar</button>
+        </div>
+        </form>
 
         <section id="contenedorNotificaciones" class="notificaciones"></section>
     </main>
 
     <footer class="pie">
-        <small>Para Carlos el Salvaje </small>
+        <small>Para Carlos el Salvaje</small>
     </footer>
 
     <script type="module" src="JsMain.js"></script>
 </body>
 </html>
+
+
 
 
 

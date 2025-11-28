@@ -1,159 +1,153 @@
-import { formatearMoneda } from './Contabilizador.js';
+// js/ui.js
+import { formatearMoneda, calcularDesgloseIndependiente } from './Contabilizador.js';
 
-/**
- * Mapa de emojis por denominación
- */
+/* Emojis por denominación */
 const emojiPorDenominacion = {
-  1000: "💵",
-  500: "💵",
-  200: "💵",
-  100: "💵",
-  50: "💵",
-  20: "💵",
-  10: "💵",
-  5: "💵",
-  3: "💵",
-  1: "💵"
-};
-
-/**
- * Render del panel superior (contador/faltante).
- * SOLO genera bloques con clase "bloque-fajo".
- */
-export function renderListaFajosFaltante(contenedorLista, desglose) {
-  contenedorLista.innerHTML = '';
-
-  for (const it of desglose) {
-    const emoji = emojiPorDenominacion[it.denominacion] || "💵";
-    const bloque = document.createElement('div');
-    bloque.className = 'bloque-fajo';
-    bloque.innerHTML = `
-      <div class="titulo">Denominación: ${emoji} $${it.denominacion}</div>
-      <div class="linea">
-        <span>Fajos (100):</span>
-        <input type="text" class="input" value="${it.fajos}" readonly />
-      </div>
-      <div class="linea">
-        <span>Billetes sueltos:</span>
-        <input type="text" class="input" value="${it.sueltos}" readonly />
-      </div>
-      <div class="linea">
-        <span>Subtotal:</span>
-        <span class="subtotal-movil">${formatearMoneda(it.subtotal)}</span>
-      </div>
-    `;
-    contenedorLista.appendChild(bloque);
-  }
-}
-
-/**
- * Render del formulario manual.
- * SOLO genera bloques con clase "bloque-fajo".
- */
-export function renderFormularioManual(contenedor, denominaciones) {
-  contenedor.innerHTML = '';
-
-  const frag = document.createDocumentFragment();
-
-  denominaciones.forEach((denom) => {
-    const emoji = emojiPorDenominacion[denom] || "💵";
-    const bloque = document.createElement('div');
-    bloque.className = 'bloque-fajo';
-    bloque.innerHTML = `
-      <div class="titulo">Denominación: ${emoji} $${denom}</div>
-      <div class="linea">
-        <span>Fajos (100):</span>
-        <input type="number" min="0" step="1" value="0"
-          class="input-fajo" data-denominacion="${denom}" aria-label="Fajos de ${denom}" />
-      </div>
-      <div class="linea">
-        <span>Billetes sueltos:</span>
-        <input type="number" min="0" step="1" value="0"
-          class="input-suelto" data-denominacion="${denom}" aria-label="Billetes sueltos de ${denom}" />
-      </div>
-      <div class="linea">
-        <span>Subtotal:</span>
-        <span class="subtotal-movil" data-denominacion="${denom}">$0</span>
-      </div>
-    `;
-    frag.appendChild(bloque);
-  });
-
-  contenedor.appendChild(frag);
-}
-
-/**
- * Sincroniza el valor entre inputs duplicados (desktop/móvil) para una denominación.
- */
-function sincronizarDuplicados(contenedor, clase, denominacion, valor) {
-  const dupes = contenedor.querySelectorAll(`.${clase}[data-denominacion="${denominacion}"]`);
-  dupes.forEach((el) => {
-    if (String(el.value) !== String(valor)) el.value = valor;
-  });
-}
-
-/**
- * Lee los aportes manuales en forma {denominacion, fajos, sueltos}
- * sincroniza duplicados y actualiza los subtotales (solo bloques).
- */
-export function leerYActualizarAportes(contenedor) {
-  const aportes = [];
-
-  const denomsSet = new Set([
-    ...Array.from(contenedor.querySelectorAll('.input-fajo')).map((el) => Number(el.dataset.denominacion)),
-    ...Array.from(contenedor.querySelectorAll('.input-suelto')).map((el) => Number(el.dataset.denominacion)),
-  ]);
-
-  denomsSet.forEach((denom) => {
-    const fajosInputs = contenedor.querySelectorAll(`.input-fajo[data-denominacion="${denom}"]`);
-    const sueltosInputs = contenedor.querySelectorAll(`.input-suelto[data-denominacion="${denom}"]`);
-
-    const pickValor = (nodes) => {
-      const focused = Array.from(nodes).find((el) => el === document.activeElement);
-      if (focused) return focused.value;
-      const nonEmpty = Array.from(nodes).find((el) => String(el.value).length > 0);
-      return nonEmpty ? nonEmpty.value : '0';
+    1000: '💵', 500: '💵', 200: '💵', 100: '💵',
+    50: '💵', 20: '💵', 10: '💵', 5: '💵', 3: '💵', 1: '💵'
     };
 
-    const fajosVal = Math.max(0, Math.floor(Number(pickValor(fajosInputs)) || 0));
-    const sueltosVal = Math.max(0, Math.floor(Number(pickValor(sueltosInputs)) || 0));
+    /**
+     * Renderiza la tabla base (Denominaciones | Faltante | Manual).
+     */
+    export function renderTablaUnica(contenedor, denominaciones) {
+    contenedor.innerHTML = '';
 
-    sincronizarDuplicados(contenedor, 'input-fajo', denom, fajosVal);
-    sincronizarDuplicados(contenedor, 'input-suelto', denom, sueltosVal);
+    denominaciones.forEach((denom) => {
+        const emoji = emojiPorDenominacion[denom] || '💵';
 
-    const subtotal = (fajosVal * 100 + sueltosVal) * denom;
+        const fila = document.createElement('div');
+        fila.className = 'fila';
+        fila.dataset.denominacion = String(denom);
 
-    const subtotalMovil = contenedor.querySelector(`.subtotal-movil[data-denominacion="${denom}"]`);
-    if (subtotalMovil) subtotalMovil.textContent = formatearMoneda(subtotal);
+        fila.innerHTML = `
+        <!-- Columna 1: Denominaciones -->
+        <div class="celda columna-denominacion">
+            <div class="bloque-fajo">
+            <div class="titulo">${emoji} $${denom}</div>
+            <div class="linea"><span>Fajos (100):</span><span class="valor denom-fajos">0</span></div>
+            <div class="linea"><span>Billetes sueltos:</span><span class="valor denom-sueltos">0</span></div>
+            </div>
+        </div>
 
-    aportes.push({ denominacion: denom, fajos: fajosVal, sueltos: sueltosVal });
-  });
+        <!-- Columna 2: Faltante (por denominación) -->
+        <div class="celda columna-faltante">
+            <input type="text" class="input-faltante-fajos" value="0" readonly />
+            <input type="text" class="input-faltante-sueltos" value="0" readonly />
+        </div>
 
-  return aportes;
-}
+        <!-- Columna 3: Validación manual -->
+        <div class="celda columna-manual">
+            <div class="grupo-vertical">
+            <input type="number" min="0" step="1" value="0"
+                class="input-fajo" data-denominacion="${denom}" aria-label="Fajos ${denom}" />
+            <input type="number" min="0" step="1" value="0"
+                class="input-suelto" data-denominacion="${denom}" aria-label="Sueltos ${denom}" />
+            </div>
+        </div>
+        `;
 
-/** Notificación tipo toast */
-export function mostrarNotificacion(contenedor, tipo, mensaje, duracionMs = 2200) {
-  const toast = document.createElement('div');
-  toast.className = `toast ${tipo}`;
-  toast.textContent = mensaje;
-  contenedor.appendChild(toast);
-  setTimeout(() => toast.remove(), duracionMs);
-}
+        contenedor.appendChild(fila);
+    });
+    }
 
-/** Actualiza resúmenes superiores y cambia color de la web si se valida */
-export function actualizarResumenes(nodoTotal, nodoFaltante, total, faltante) {
-  nodoTotal.textContent = `Total: ${formatearMoneda(total)}`;
-  nodoFaltante.textContent = `Faltante: ${formatearMoneda(Math.max(0, faltante))}`;
+    /**
+     * Fija las sugerencias iniciales en Denominaciones y el faltante inicial.
+     */
+    export function setSugerenciaInicial(contenedor, desglose) {
+    const byDenom = new Map();
+    desglose.forEach(it => byDenom.set(Number(it.denominacion), it));
 
-  // Feedback gráfico: si ya se validó el total, cambia color de fondo
-  const body = document.body;
-  if (faltante === 0 && total > 0) {
-    body.classList.add("validado");
-  } else {
-    body.classList.remove("validado");
-  }
-}
+    contenedor.querySelectorAll('.fila').forEach(fila => {
+        const denom = Number(fila.dataset.denominacion);
+        const it = byDenom.get(denom) || { fajos: 0, sueltos: 0 };
+
+        fila.querySelector('.denom-fajos').textContent = String(it.fajos);
+        fila.querySelector('.denom-sueltos').textContent = String(it.sueltos);
+
+        fila.querySelector('.input-faltante-fajos').value = String(it.fajos);
+        fila.querySelector('.input-faltante-sueltos').value = String(it.sueltos);
+    });
+    }
+
+    /**
+     * Actualiza en tiempo real:
+     * - Calcula el total manual ingresado.
+     * - Recalcula el faltante por denominación (fajos y sueltos) en función del dinero restante.
+     * - Notifica faltante, validación o exceso.
+     * - Cambia color de la tabla según estado.
+     */
+    export function actualizarTabla(contenedorTabla, totalObjetivo, necesarioInicial, nodoResumenManual, nodoTablaFormulario, contenedorNotificaciones) {
+    const filas = contenedorTabla.querySelectorAll('.fila');
+    let totalManual = 0;
+
+    // Calcular total manual ingresado
+    filas.forEach(fila => {
+        const denom = Number(fila.dataset.denominacion);
+        const fajos = Math.max(0, Math.floor(Number(fila.querySelector('.input-fajo')?.value) || 0));
+        const sueltos = Math.max(0, Math.floor(Number(fila.querySelector('.input-suelto')?.value) || 0));
+
+        const subtotal = (fajos * 100 + sueltos) * denom;
+        totalManual += subtotal;
+    });
+
+    if (nodoResumenManual) {
+        nodoResumenManual.textContent = `Aportado manual: ${formatearMoneda(totalManual)}`;
+    }
+
+    if (Number.isFinite(totalObjetivo) && totalObjetivo > 0) {
+        const dineroFaltante = totalObjetivo - totalManual;
+
+        // Recalcular desglose del dinero faltante en fajos/sueltos por denominación
+        let desgloseFaltante = [];
+        if (dineroFaltante > 0) {
+        desgloseFaltante = calcularDesgloseIndependiente(dineroFaltante);
+        }
+
+        const faltMap = new Map();
+        desgloseFaltante.forEach(it => faltMap.set(Number(it.denominacion), it));
+
+        filas.forEach(fila => {
+        const denom = Number(fila.dataset.denominacion);
+        const it = faltMap.get(denom) || { fajos: 0, sueltos: 0 };
+        fila.querySelector('.input-faltante-fajos').value = String(it.fajos);
+        fila.querySelector('.input-faltante-sueltos').value = String(it.sueltos);
+        });
+
+        // Notificaciones y colores
+        Array.from(contenedorNotificaciones.querySelectorAll('.toast')).forEach(t => t.remove());
+
+        if (dineroFaltante > 0) {
+        mostrarNotificacion(contenedorNotificaciones, 'info', `Falta por validar: ${formatearMoneda(dineroFaltante)}`, 1200);
+        nodoTablaFormulario?.classList.remove('validado', 'excedido');
+        } else if (dineroFaltante === 0) {
+        mostrarNotificacion(contenedorNotificaciones, 'exito', 'Cantidad completa validada.', 1500);
+        nodoTablaFormulario?.classList.add('validado');
+        nodoTablaFormulario?.classList.remove('excedido');
+        } else {
+        mostrarNotificacion(contenedorNotificaciones, 'error', `Has excedido el total en ${formatearMoneda(Math.abs(dineroFaltante))}`, 1500);
+        nodoTablaFormulario?.classList.add('excedido');
+        nodoTablaFormulario?.classList.remove('validado');
+        // En exceso, ponemos faltante en 0
+        filas.forEach(fila => {
+            fila.querySelector('.input-faltante-fajos').value = "0";
+            fila.querySelector('.input-faltante-sueltos').value = "0";
+        });
+        }
+    }
+    }
+
+    /** Notificación tipo toast */
+    export function mostrarNotificacion(contenedor, tipo, mensaje, duracionMs = 2200) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    toast.textContent = mensaje;
+    contenedor.appendChild(toast);
+    setTimeout(() => toast.remove(), duracionMs);
+    }
+
+
+
 
 
 
