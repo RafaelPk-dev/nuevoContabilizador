@@ -44,12 +44,14 @@
     .grupo-input { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .input {
     background: #0c0f13;
+    width: 80vw;
+    
     border: 1px solid var(--borde);
     color: var(--texto);
     padding: 0.6rem 0.75rem;
     border-radius: 8px;
     outline: none;
-    font-size: 1.6rem; /* números grandes */
+    font-size: 2rem; /* números grandes */
     }
     .input:focus {
     border-color: var(--primario);
