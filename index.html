@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contabilidad móvil</title>
@@ -24,30 +24,67 @@
                 step="1"
                 inputmode="numeric"
                 placeholder="Ej: 2358"
-                class="input"
+                class="input numero-grande"
                 required
             />
             <button type="submit" class="btn btn-primario">Calcular</button>
+            <!-- Botón para desplegar calculadora -->
+            <button type="button" id="btnCalc" class="btn btn-secundario">🧮</button>
             </div>
         </form>
+
+        <!-- Calculadora simple oculta por defecto -->
+        <div id="calcContainer" class="calc-container oculto">
+            <input type="text" id="calcDisplay" class="calc-display" readonly />
+            <div class="calc-buttons">
+            <button class="calc-btn" data-value="7">7</button>
+            <button class="calc-btn" data-value="8">8</button>
+            <button class="calc-btn" data-value="9">9</button>
+            <button class="calc-btn op" data-value="+">+</button>
+
+            <button class="calc-btn" data-value="4">4</button>
+            <button class="calc-btn" data-value="5">5</button>
+            <button class="calc-btn" data-value="6">6</button>
+            <button class="calc-btn op" data-value="-">-</button>
+
+            <button class="calc-btn" data-value="1">1</button>
+            <button class="calc-btn" data-value="2">2</button>
+            <button class="calc-btn" data-value="3">3</button>
+            <button class="calc-btn op" data-value="*">×</button>
+
+            <button class="calc-btn" data-value="0">0</button>
+            <button class="calc-btn" data-value=".">.</button>
+            <button class="calc-btn op" data-value="/">÷</button>
+            <button class="calc-btn" id="calcEquals">=</button>
+
+            <button class="calc-btn clear" id="calcClear">C</button>
+            </div>
+        </div>
+        </div>
+
+        <!-- Valores fijos debajo de barraTotal -->
+        <div class="barra-info">
+        <div id="infoAportado">Aportado manual: $0</div>
+        <div id="infoFaltante">Faltante: $0</div>
+        </div>
+
+        <!-- Encabezados de tabla fijados dentro del header -->
+        <div class="tabla-encabezado-fixed">
+        <div class="th">Denominaciones</div>
+        <div class="th">Faltante</div>
+        <div class="th">Validación manual</div>
         </div>
     </header>
 
     <main class="contenedor">
-        <!-- Único formulario tipo tabla -->
+        <!-- Único formulario tipo tabla (solo cuerpo, sin encabezado) -->
         <form id="formUnico" class="tabla-formulario" autocomplete="off">
-        <div class="tabla-encabezado">
-            <div class="celda encabezado">Denominaciones</div>
-            <div class="celda encabezado">Faltante</div>
-            <div class="celda encabezado">Validación manual</div>
-        </div>
-
         <div id="tablaDenominaciones" class="tabla-cuerpo">
-            <!-- Filas generadas dinámicamente por JS (una por denominación) -->
+            <!-- Filas generadas dinámicamente por JS -->
         </div>
 
         <div class="tabla-pie">
-            <span id="resumenManual">Aportado manual: $0</span>
+            
             <button id="btnValidar" type="submit" class="btn btn-primario">Validar</button>
             <button id="btnLimpiar" type="button" class="btn btn-secundario">Limpiar</button>
         </div>
@@ -57,12 +94,14 @@
     </main>
 
     <footer class="pie">
-        <small>Para Carlos el Salvaje</small>
+        <small>Para Carlos, el Salvaje.</small>
     </footer>
 
     <script type="module" src="JsMain.js"></script>
-</body>
-</html>
+    </body>
+    </html>
+
+
 
 
 

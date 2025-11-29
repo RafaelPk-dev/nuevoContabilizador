@@ -1,8 +1,8 @@
-// js/ui.js
-import { formatearMoneda, calcularDesgloseIndependiente } from './Contabilizador.js';
+    // js/ui.js
+    import { formatearMoneda, calcularDesgloseIndependiente } from './Contabilizador.js';
 
-/* Emojis por denominación */
-const emojiPorDenominacion = {
+    /* Emojis por denominación */
+    const emojiPorDenominacion = {
     1000: '💵', 500: '💵', 200: '💵', 100: '💵',
     50: '💵', 20: '💵', 10: '💵', 5: '💵', 3: '💵', 1: '💵'
     };
@@ -30,19 +30,19 @@ const emojiPorDenominacion = {
             </div>
         </div>
 
-        <!-- Columna 2: Faltante (por denominación) -->
+        <!-- Columna 2: Faltante -->
         <div class="celda columna-faltante">
-            <input type="text" class="input-faltante-fajos" value="0" readonly />
-            <input type="text" class="input-faltante-sueltos" value="0" readonly />
+            <input type="text" class="input-faltante-fajos" placeholder="" readonly />
+            <input type="text" class="input-faltante-sueltos" placeholder="" readonly />
         </div>
 
         <!-- Columna 3: Validación manual -->
         <div class="celda columna-manual">
             <div class="grupo-vertical">
-            <input type="number" min="0" step="1" value="0"
-                class="input-fajo" data-denominacion="${denom}" aria-label="Fajos ${denom}" />
-            <input type="number" min="0" step="1" value="0"
-                class="input-suelto" data-denominacion="${denom}" aria-label="Sueltos ${denom}" />
+            <input type="number" min="0" step="1"
+                class="input-fajo" data-denominacion="${denom}" aria-label="Fajos ${denom}" placeholder="" />
+            <input type="number" min="0" step="1"
+                class="input-suelto" data-denominacion="${denom}" aria-label="Sueltos ${denom}" placeholder="" />
             </div>
         </div>
         `;
@@ -73,7 +73,8 @@ const emojiPorDenominacion = {
     /**
      * Actualiza en tiempo real:
      * - Calcula el total manual ingresado.
-     * - Recalcula el faltante por denominación (fajos y sueltos) en función del dinero restante.
+     * - Recalcula el faltante por denominación.
+     * - Actualiza los divs #infoAportado y #infoFaltante en el header.
      * - Notifica faltante, validación o exceso.
      * - Cambia color de la tabla según estado.
      */
@@ -91,14 +92,16 @@ const emojiPorDenominacion = {
         totalManual += subtotal;
     });
 
-    if (nodoResumenManual) {
-        nodoResumenManual.textContent = `Aportado manual: ${formatearMoneda(totalManual)}`;
+    // Actualizar div de aportado manual en header
+    const infoAportado = document.getElementById('infoAportado');
+    if (infoAportado) {
+        infoAportado.textContent = `Aportado manual: ${formatearMoneda(totalManual)}`;
     }
 
     if (Number.isFinite(totalObjetivo) && totalObjetivo > 0) {
         const dineroFaltante = totalObjetivo - totalManual;
 
-        // Recalcular desglose del dinero faltante en fajos/sueltos por denominación
+        // Recalcular desglose del dinero faltante
         let desgloseFaltante = [];
         if (dineroFaltante > 0) {
         desgloseFaltante = calcularDesgloseIndependiente(dineroFaltante);
@@ -110,9 +113,21 @@ const emojiPorDenominacion = {
         filas.forEach(fila => {
         const denom = Number(fila.dataset.denominacion);
         const it = faltMap.get(denom) || { fajos: 0, sueltos: 0 };
-        fila.querySelector('.input-faltante-fajos').value = String(it.fajos);
-        fila.querySelector('.input-faltante-sueltos').value = String(it.sueltos);
+        fila.querySelector('.input-faltante-fajos').value = it.fajos ? String(it.fajos) : "";
+        fila.querySelector('.input-faltante-sueltos').value = it.sueltos ? String(it.sueltos) : "";
         });
+
+        // Actualizar div de faltante en header
+        const infoFaltante = document.getElementById('infoFaltante');
+        if (infoFaltante) {
+        if (dineroFaltante > 0) {
+            infoFaltante.textContent = `Faltante: ${formatearMoneda(dineroFaltante)}`;
+        } else if (dineroFaltante === 0) {
+            infoFaltante.textContent = `Faltante: $0 (Meta alcanzada)`;
+        } else {
+            infoFaltante.textContent = `Excedido en: ${formatearMoneda(Math.abs(dineroFaltante))}`;
+        }
+        }
 
         // Notificaciones y colores
         Array.from(contenedorNotificaciones.querySelectorAll('.toast')).forEach(t => t.remove());
@@ -128,23 +143,80 @@ const emojiPorDenominacion = {
         mostrarNotificacion(contenedorNotificaciones, 'error', `Has excedido el total en ${formatearMoneda(Math.abs(dineroFaltante))}`, 1500);
         nodoTablaFormulario?.classList.add('excedido');
         nodoTablaFormulario?.classList.remove('validado');
-        // En exceso, ponemos faltante en 0
         filas.forEach(fila => {
-            fila.querySelector('.input-faltante-fajos').value = "0";
-            fila.querySelector('.input-faltante-sueltos').value = "0";
+            fila.querySelector('.input-faltante-fajos').value = "";
+            fila.querySelector('.input-faltante-sueltos').value = "";
         });
         }
     }
     }
 
+    /**
+     * Nueva funcionalidad: al validar, limpiar filas sin valores y dejar solo las ingresadas.
+     */
+    export function filtrarFilasIngresadas(contenedorTabla) {
+    const filas = contenedorTabla.querySelectorAll('.fila');
+    filas.forEach(fila => {
+        const fajos = Number(fila.querySelector('.input-fajo')?.value) || 0;
+        const sueltos = Number(fila.querySelector('.input-suelto')?.value) || 0;
+        if (fajos === 0 && sueltos === 0) {
+        fila.remove(); // eliminar fila sin valores
+        }
+    });
+    }
+
     /** Notificación tipo toast */
-    export function mostrarNotificacion(contenedor, tipo, mensaje, duracionMs = 2200) {
+    export function mostrarNotificacion(contenedor, tipo, mensaje, duracionMs =30000) {
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
     toast.textContent = mensaje;
     contenedor.appendChild(toast);
-    setTimeout(() => toast.remove(), duracionMs);
+    setTimeout(() => toast.remove(),4000);
     }
+
+    /**
+     * Inicializa la calculadora simple.
+     * Al calcular, inserta el resultado en el input #cantTotal automáticamente.
+     */
+    export function initCalculadora() {
+    const btnCalc = document.getElementById('btnCalc');
+    const calcContainer = document.getElementById('calcContainer');
+    const calcDisplay = document.getElementById('calcDisplay');
+    const calcButtons = calcContainer.querySelectorAll('.calc-btn');
+    const inputCantidad = document.getElementById('cantTotal');
+
+    let expression = "";
+
+    btnCalc.addEventListener('click', () => {
+        calcContainer.classList.toggle('oculto');
+    });
+
+    calcButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+        const val = btn.dataset.value;
+        if (btn.id === "calcEquals") {
+            try {
+            const result = eval(expression); // ⚡ eval para operaciones básicas
+            calcDisplay.value = result;
+            inputCantidad.value = result; // insertar resultado en input principal
+            expression = String(result);
+            } catch {
+            calcDisplay.value = "Error";
+            expression = "";
+            }
+        } else if (btn.id === "calcClear") {
+            expression = "";
+            calcDisplay.value = "";
+        } else {
+            expression += val;
+            calcDisplay.value = expression;
+        }
+        });
+    });
+    }
+
+
+
 
 
 

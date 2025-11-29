@@ -1,4 +1,4 @@
-    :root {
+        :root {
     --fondo: #0f1216;
     --panel: #161a20;
     --borde: #252a33;
@@ -14,25 +14,25 @@
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
     body {
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial, sans-serif;
+    font-family: "Times New Roman", Times, serif;
     background: var(--fondo);
     color: var(--texto);
     }
 
-    /* Encabezado fijo */
+    /* Encabezado fijo completo */
     .encabezado {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 300;
     background: #12161b;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem 0.5rem;
     border-bottom: 1px solid var(--borde);
     }
-    .encabezado h1 { margin: 0; font-size: 1.5rem; }
-    .subtitulo { margin: 0; color: var(--texto-sec); font-size: 0.95rem; }
-    .barra-total { margin-top: 0.5rem; }
+    .encabezado h1 { margin: 0; font-size: 1.6rem; letter-spacing: 0.2px; }
+    .subtitulo { margin: 0; color: var(--texto-sec); font-size: 1rem; }
 
-    /* Formulario cantidad total (sticky bar) */
+    /* Formulario cantidad total */
+    .barra-total { margin-top: 0.5rem; }
     .form-cantidad {
     background: var(--panel);
     border: 1px solid var(--borde);
@@ -41,14 +41,15 @@
     margin-bottom: 0.5rem;
     }
     .label { display: block; margin-bottom: 0.5rem; color: var(--texto-sec); }
-    .grupo-input { display: flex; gap: 0.5rem; }
+    .grupo-input { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .input {
-    background: #0c0f13; /* oscuro */
+    background: #0c0f13;
     border: 1px solid var(--borde);
     color: var(--texto);
-    padding: 0.5rem 0.6rem;
+    padding: 0.6rem 0.75rem;
     border-radius: 8px;
     outline: none;
+    font-size: 1.6rem; /* números grandes */
     }
     .input:focus {
     border-color: var(--primario);
@@ -57,18 +58,70 @@
 
     /* Botones */
     .btn {
-    padding: 0.625rem 0.9rem;
+    padding: 0.7rem 1rem;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
     border: none;
+    font-size: 1rem;
     }
     .btn-primario { background: var(--primario); color: #0e0e0e; }
     .btn-primario:hover { background: var(--primario-oscuro); }
     .btn-secundario { background: var(--secundario); color: var(--texto); }
     .btn-secundario:hover { filter: brightness(1.1); }
 
-    /* Tabla formulario única (móvil) */
+    /* Barra info fija */
+    .barra-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.4rem;
+    }
+    .barra-info div {
+    background: #0c0f13;
+    border: 1px solid var(--borde);
+    color: var(--texto);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.25rem; /* números grandes */
+    }
+    #infoAportado { color: #8fd1ff; }
+    #infoFaltante { color: #ffd48f; }
+
+    /* Encabezados de tabla fijados dentro del header */
+    .tabla-encabezado-fixed {
+    margin-top: 0.5rem;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--borde);
+    border-left: 1px solid var(--borde);
+    border-right: 1px solid var(--borde);
+    border-bottom: 1px solid var(--borde);
+    border-radius: 10px;
+    overflow: hidden;
+    }
+    .tabla-encabezado-fixed .th {
+    background: #13171d;
+    color: var(--texto-sec);
+    font-weight: 700;
+    padding: 0.6rem 0.75rem;
+    text-align: center;
+    border-right: 1px solid var(--borde);
+    }
+    .tabla-encabezado-fixed .th:last-child {
+    border-right: none;
+    }
+
+    /* Contenedor principal */
+    .contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.75rem 1rem 1.25rem;
+    }
+
+    /* Tabla (solo cuerpo, sin encabezado) */
     .tabla-formulario {
     display: flex;
     flex-direction: column;
@@ -77,8 +130,9 @@
     border-radius: 12px;
     overflow-x: auto;
     transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+    margin-top: 0.6rem;
     }
-    .tabla-encabezado, .fila {
+    .fila {
     display: grid;
     grid-template-columns: 1.3fr 1fr 1fr; /* Denominaciones | Faltante | Manual */
     }
@@ -91,19 +145,15 @@
     justify-content: center;
     }
     .celda:last-child { border-right: none; }
-    .celda.encabezado {
-    font-weight: 700;
-    color: var(--texto-sec);
-    background: #13171d;
-    }
     .tabla-cuerpo .fila:last-child .celda { border-bottom: none; }
 
-    /* Columna Denominaciones (sugerencia estática, sin inputs) */
+    /* Columna Denominaciones */
     .columna-denominacion { justify-content: flex-start; }
     .bloque-fajo { width: 100%; }
     .bloque-fajo .titulo {
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 0.4rem;
+    font-size: 1.15rem;
     }
     .bloque-fajo .linea {
     display: flex;
@@ -114,27 +164,32 @@
     }
     .bloque-fajo .valor {
     color: var(--texto-sec);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.2rem; /* números grandes */
     }
 
-    /* Columna Faltante (dos inputs readonly, oscuros) */
+    /* Columna Faltante (por denominación: fajos y sueltos readonly) */
     .columna-faltante {
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
     }
     .input-faltante-fajos,
-    .input-faltante-sueltos {
-    background: #0c0f13; /* oscuro */
+    .input-faltante-sueltos,
+    .input-faltante-dinero {
+    background: #0c0f13;
     border: 1px solid var(--borde);
     color: var(--texto);
-    padding: 0.45rem 0.55rem;
+    padding: 0.55rem 0.6rem;
     border-radius: 6px;
     outline: none;
-    width: 84px;
+    width: 100%;
+    max-width: 120px;
     text-align: center;
+    font-size: 1.25rem; /* números grandes */
     }
     .input-faltante-fajos:focus,
-    .input-faltante-sueltos:focus {
+    .input-faltante-sueltos:focus,
+    .input-faltante-dinero:focus {
     border-color: var(--primario);
     box-shadow: 0 0 0 2px rgba(74, 164, 255, 0.25);
     }
@@ -144,19 +199,20 @@
     .grupo-vertical {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.6rem;
     width: 100%;
     }
     .input-fajo, .input-suelto {
-    background: #0c0f13; /* oscuro */
+    background: #0c0f13;
     border: 1px solid var(--borde);
     color: var(--texto);
-    padding: 0.5rem 0.6rem;
+    padding: 0.6rem 0.75rem;
     border-radius: 8px;
     outline: none;
     width: 100%;
-    max-width: 160px;
+    max-width: 170px;
     text-align: center;
+    font-size: 1.3rem; /* números grandes */
     }
     .input-fajo:focus, .input-suelto:focus {
     border-color: var(--primario);
@@ -168,12 +224,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 0.9rem 1rem;
     border-top: 1px solid var(--borde);
     }
     .tabla-pie #resumenManual {
     color: var(--texto-sec);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.15rem;
     }
 
     /* Notificaciones (toast) */
@@ -183,7 +240,7 @@
     right: 1rem;
     display: grid;
     gap: 0.5rem;
-    z-index: 1000;
+    z-index: 400;
     }
     .toast {
     background: #12161b;
@@ -193,6 +250,7 @@
     border-radius: 8px;
     box-shadow: 0 6px 24px rgba(0,0,0,0.35);
     animation: aparecer 180ms ease-out;
+    font-size: 1rem;
     }
     .toast.exito { border-color: #228b5b; }
     .toast.error { border-color: #8b2222; }
@@ -201,14 +259,6 @@
     @keyframes aparecer {
     from { opacity: 0; transform: translateY(-6px); }
     to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Footer */
-    .pie {
-    padding: 1rem;
-    text-align: center;
-    color: var(--texto-sec);
-    border-top: 1px solid var(--borde);
     }
 
     /* Estados visuales de la tabla (validado y excedido) */
@@ -220,14 +270,12 @@
     .tabla-formulario.validado .celda {
     border-color: #e5e5e5;
     }
-    .tabla-formulario.validado .encabezado {
-    background: #f7f7f7;
-    color: #333;
-    }
     .tabla-formulario.validado .input-fajo,
     .tabla-formulario.validado .input-suelto,
     .tabla-formulario.validado .input-faltante-fajos,
-    .tabla-formulario.validado .input-faltante-sueltos {
+    .tabla-formulario.validado .input-faltante-sueltos,
+    .tabla-formulario.validado .input,
+    .tabla-formulario.validado .input-faltante-dinero {
     background: #ffffff;
     border-color: #cfcfcf;
     color: #000000;
@@ -242,28 +290,86 @@
     .tabla-formulario.excedido .celda {
     border-color: #aa2222;
     }
-    .tabla-formulario.excedido .encabezado {
-    background: #aa2222;
-    color: #fff;
-    }
     .tabla-formulario.excedido .input-fajo,
     .tabla-formulario.excedido .input-suelto,
     .tabla-formulario.excedido .input-faltante-fajos,
-    .tabla-formulario.excedido .input-faltante-sueltos {
+    .tabla-formulario.excedido .input-faltante-sueltos,
+    .tabla-formulario.excedido .input,
+    .tabla-formulario.excedido .input-faltante-dinero {
     background: #aa2222;
     border-color: #660000;
     color: #fff;
     }
 
+    /* Footer */
+    .pie {
+    padding: 1rem;
+    text-align: center;
+    color: var(--texto-sec);
+    border-top: 1px solid var(--borde);
+    }
+
     /* Responsive móvil */
     @media (max-width: 768px) {
-    .tabla-encabezado, .fila {
-        grid-template-columns: 1.4fr 1fr 1fr; /* Denominaciones más amplia */
+    .fila { grid-template-columns: 1.4fr 1fr 1fr; }
+    .encabezado h1 { font-size: 1.4rem; }
+    .barra-info div { font-size: 1.15rem; }
+    .input-fajo, .input-suelto { max-width: 150px; }
     }
-    .input-fajo, .input-suelto {
-        max-width: 140px;
+
+
+    /* Calculadora simple */
+    .calc-container {
+    margin-top: 0.5rem;
+    background: var(--panel);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 0.75rem;
+    max-width: 260px;
     }
+    .calc-container.oculto { display: none; }
+
+    .calc-display {
+    width: 100%;
+    background: #0c0f13;
+    border: 1px solid var(--borde);
+    color: var(--texto);
+    font-size: 1.4rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+    text-align: right;
     }
+
+    .calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+    }
+
+    .calc-btn {
+    background: #1c2129;
+    border: 1px solid var(--borde);
+    color: var(--texto);
+    font-size: 1.2rem;
+    padding: 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    }
+    .calc-btn:hover { background: var(--primario-oscuro); }
+    .calc-btn.op { background: #2a2f38; }
+    .calc-btn.clear { grid-column: span 4; background: #8b0000; color: #fff; }
+
+    .calc-btn.close {
+    grid-column: span 4;
+    background: #39414d;
+    color: #fff;
+    }
+    .calc-btn.close:hover {
+    background: #2a2f38;
+    }
+
+
 
 
 

@@ -4,7 +4,9 @@ import {
     renderTablaUnica,
     setSugerenciaInicial,
     actualizarTabla,
-    mostrarNotificacion
+    mostrarNotificacion,
+    filtrarFilasIngresadas,
+    initCalculadora
     } from './ui.js';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -18,7 +20,10 @@ import {
     const resumenManual = document.getElementById('resumenManual');
 
     let totalObjetivo = 0;
-    let sugerenciaInicial = []; // [{denominacion, fajos, sueltos, subtotal}]
+    let sugerenciaInicial = [];
+
+    // Inicializar calculadora
+    initCalculadora();
 
     // Establecer total objetivo y renderizar tabla
     formCantidad.addEventListener('submit', (ev) => {
@@ -36,8 +41,7 @@ import {
         renderTablaUnica(tablaDenominaciones, DENOMINACIONES);
         setSugerenciaInicial(tablaDenominaciones, sugerenciaInicial);
 
-        // Reset visual
-        formUnico.classList.remove('validado');
+        formUnico.classList.remove('validado', 'excedido');
         resumenManual.textContent = 'Aportado manual: $0';
         mostrarNotificacion(contenedorNotificaciones, 'exito', 'Total establecido correctamente.');
     });
@@ -56,7 +60,7 @@ import {
         }
     });
 
-    // Validar manual (opcional)
+    // Validar manual: recalcula, notifica y filtra filas ingresadas
     formUnico.addEventListener('submit', (ev) => {
         ev.preventDefault();
         actualizarTabla(
@@ -67,7 +71,8 @@ import {
         formUnico,
         contenedorNotificaciones
         );
-        mostrarNotificacion(contenedorNotificaciones, 'exito', 'Validación realizada.');
+        filtrarFilasIngresadas(tablaDenominaciones);
+        mostrarNotificacion(contenedorNotificaciones, 'exito', 'Validación realizada. Se muestran solo las filas con valores.');
     });
 
     // Limpiar todo
@@ -77,10 +82,12 @@ import {
         totalObjetivo = 0;
         sugerenciaInicial = [];
         inputCantidad.value = '';
-        formUnico.classList.remove('validado');
+        formUnico.classList.remove('validado', 'excedido');
         mostrarNotificacion(contenedorNotificaciones, 'info', 'Formulario limpiado.');
     });
     });
+
+
 
 
 
