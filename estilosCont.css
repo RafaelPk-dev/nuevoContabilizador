@@ -149,7 +149,7 @@
     /* Tabla (solo cuerpo, sin encabezado) */
     .tabla-formulario {
     position: relative;
-    top: 62vh;
+    top: 55vh;
     display: flex;
     flex-direction: column;
     background: var(--panel);
