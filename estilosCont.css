@@ -31,6 +31,43 @@
     .encabezado h1 { margin: 0; font-size: 1.6rem; letter-spacing: 0.2px; }
     .subtitulo { margin: 0; color: var(--texto-sec); font-size: 1rem; }
 
+
+        .menu-moneda {
+  margin-top: 0.5rem;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 0.75rem;
+  max-width: 220px;
+}
+
+.menu-moneda.oculto {
+  display: none;
+}
+
+.select-moneda {
+  width: 100%;
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: 1px solid var(--borde);
+  background: #0c0f13;
+  color: var(--texto);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.input-moneda {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--borde);
+  background: #0c0f13;
+  color: var(--texto);
+  font-size: 1.1rem;
+}
+
+
+
     /* Formulario cantidad total */
     .barra-total { margin-top: 0.5rem; }
     .form-cantidad {

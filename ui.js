@@ -178,41 +178,53 @@
      * Inicializa la calculadora simple.
      * Al calcular, inserta el resultado en el input #cantTotal automáticamente.
      */
+    // ui.js
+
     export function initCalculadora() {
-    const btnCalc = document.getElementById('btnCalc');
     const calcContainer = document.getElementById('calcContainer');
     const calcDisplay = document.getElementById('calcDisplay');
-    const calcButtons = calcContainer.querySelectorAll('.calc-btn');
-    const inputCantidad = document.getElementById('cantTotal');
+    const buttons = calcContainer.querySelectorAll('.calc-btn');
+    let currentExpression = "";
 
-    let expression = "";
-
-    btnCalc.addEventListener('click', () => {
-        calcContainer.classList.toggle('oculto');
-    });
-
-    calcButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-        const val = btn.dataset.value;
-        if (btn.id === "calcEquals") {
-            try {
-            const result = eval(expression); // ⚡ eval para operaciones básicas
-            calcDisplay.value = result;
-            inputCantidad.value = result; // insertar resultado en input principal
-            expression = String(result);
-            } catch {
-            calcDisplay.value = "Error";
-            expression = "";
-            }
-        } else if (btn.id === "calcClear") {
-            expression = "";
-            calcDisplay.value = "";
-        } else {
-            expression += val;
-            calcDisplay.value = expression;
+    function actualizarDisplay() {
+        calcDisplay.value = currentExpression;
+        try {
+        // Evaluar subtotal en tiempo real
+        const subtotal = eval(currentExpression.replace(/×/g, '*').replace(/÷/g, '/'));
+        if (!isNaN(subtotal)) {
+            calcDisplay.value = `${currentExpression} = ${subtotal}`;
         }
+        } catch (e) {
+        // Si la expresión aún no es válida, solo mostrar lo escrito
+        calcDisplay.value = currentExpression;
+        }
+    }
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+        const value = btn.dataset.value;
+
+        if (btn.id === "calcClear") {
+            currentExpression = "";
+        } else if (btn.id === "calcEquals") {
+            try {
+            currentExpression = eval(currentExpression.replace(/×/g, '*').replace(/÷/g, '/')).toString();
+            } catch (e) {
+            currentExpression = "Error";
+            }
+        } else if (btn.id === "calcClose") {
+            calcContainer.classList.add("oculto");
+            return;
+        } else {
+            currentExpression += value;
+        }
+
+        actualizarDisplay();
         });
     });
+
+    // Mostrar la calculadora centrada
+    calcContainer.classList.remove("oculto");
     }
 
 

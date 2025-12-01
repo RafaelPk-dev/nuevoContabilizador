@@ -1,4 +1,4 @@
-            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -22,7 +22,7 @@
             inputmode="numeric"
             pattern="[0-9' ]*"
             placeholder="Ej: 1'234'567"
-            title="Ingresa la cantidad total; se formatea con comillas de millar"
+            title="Ingresa la cantidad total en pesos cubanos"
             class="input numero-grande"
             required
           />
@@ -30,7 +30,7 @@
           <!-- Botón limpiar -->
           <button id="btnLimpiar" type="button" class="btn btn-secundario" title="Limpiar formulario">Limpiar</button>
 
-          <!-- Botón validar corregido: type="button" -->
+          <!-- Botón validar -->
           <button id="btnValidar" type="button" class="btn btn-primario" title="Validar aportes">Validar</button>
 
           <!-- Botón calcular -->
@@ -38,54 +38,74 @@
 
           <!-- Botón calculadora -->
           <button type="button" id="btnCalc" class="btn btn-secundario" title="Abrir calculadora">🧮</button>
+
+          <!-- Botón menú de monedas -->
+          <button type="button" id="btnMoneda" class="btn btn-secundario" title="Seleccionar moneda">💱</button>
         </div>
       </form>
 
-        <!-- Calculadora simple oculta por defecto -->
-    <div id="calcContainer" class="calc-container oculto" aria-expanded="false" aria-label="Calculadora básica">
-    <label for="calcDisplay" class="label" style="display:none;">Resultado de la calculadora</label>
-    <input
-        type="text"
-        id="calcDisplay"
-        class="calc-display"
-        readonly
-        placeholder="Resultado"
-        title="Resultado de las operaciones"
-        aria-live="polite"
-    />
-    <div class="calc-buttons" role="group" aria-label="Teclas de calculadora">
-        <!-- Fila 1 -->
-        <button class="calc-btn" data-value="7" title="7">7</button>
-        <button class="calc-btn" data-value="8" title="8">8</button>
-        <button class="calc-btn" data-value="9" title="9">9</button>
-        <button class="calc-btn op" data-value="+" title="Sumar">+</button>
+      <!-- Menú de monedas oculto -->
+      <div id="menuMoneda" class="menu-moneda oculto">
+        <label for="selectMoneda" class="label">Selecciona moneda</label>
+        <select id="selectMoneda" class="select-moneda">
+          <option value="USD">Dólar (×450)</option>
+          <option value="EUR">Euro (×500)</option>
+        </select>
 
-        <!-- Fila 2 -->
-        <button class="calc-btn" data-value="4" title="4">4</button>
-        <button class="calc-btn" data-value="5" title="5">5</button>
-        <button class="calc-btn" data-value="6" title="6">6</button>
-        <button class="calc-btn op" data-value="-" title="Restar">-</button>
+        <label for="inputMoneda" class="label">Cantidad en moneda seleccionada</label>
+        <input
+          id="inputMoneda"
+          type="number"
+          min="0"
+          placeholder="Ej: 100"
+          class="input-moneda"
+        />
+      </div>
 
-        <!-- Fila 3 -->
-        <button class="calc-btn" data-value="1" title="1">1</button>
-        <button class="calc-btn" data-value="2" title="2">2</button>
-        <button class="calc-btn" data-value="3" title="3">3</button>
-        <button class="calc-btn op" data-value="*" title="Multiplicar">×</button>
+      <!-- Calculadora simple oculta por defecto -->
+      <div id="calcContainer" class="calc-container oculto" aria-expanded="false" aria-label="Calculadora básica">
+        <label for="calcDisplay" class="label" style="display:none;">Resultado de la calculadora</label>
+        <input
+          type="text"
+          id="calcDisplay"
+          class="calc-display"
+          readonly
+          placeholder="Resultado"
+          title="Resultado de las operaciones"
+          aria-live="polite"
+        />
+        <div class="calc-buttons" role="group" aria-label="Teclas de calculadora">
+          <!-- Fila 1 -->
+          <button class="calc-btn" data-value="7" title="7">7</button>
+          <button class="calc-btn" data-value="8" title="8">8</button>
+          <button class="calc-btn" data-value="9" title="9">9</button>
+          <button class="calc-btn op" data-value="+" title="Sumar">+</button>
 
-        <!-- Fila 4 -->
-        <button class="calc-btn" data-value="0" title="0">0</button>
-        <button class="calc-btn" data-value="." title="Punto decimal">.</button>
-        <button class="calc-btn op" data-value="/" title="Dividir">÷</button>
-        <button class="calc-btn" id="calcEquals" title="Calcular resultado">=</button>
+          <!-- Fila 2 -->
+          <button class="calc-btn" data-value="4" title="4">4</button>
+          <button class="calc-btn" data-value="5" title="5">5</button>
+          <button class="calc-btn" data-value="6" title="6">6</button>
+          <button class="calc-btn op" data-value="-" title="Restar">-</button>
 
-        <!-- Fila 5: Paréntesis -->
-        <button class="calc-btn" data-value="(" title="Paréntesis izquierdo">(</button>
-        <button class="calc-btn" data-value=")" title="Paréntesis derecho">)</button>
-        <button class="calc-btn clear" id="calcClear" title="Limpiar">C</button>
-       
+          <!-- Fila 3 -->
+          <button class="calc-btn" data-value="1" title="1">1</button>
+          <button class="calc-btn" data-value="2" title="2">2</button>
+          <button class="calc-btn" data-value="3" title="3">3</button>
+          <button class="calc-btn op" data-value="*" title="Multiplicar">×</button>
+
+          <!-- Fila 4 -->
+          <button class="calc-btn" data-value="0" title="0">0</button>
+          <button class="calc-btn" data-value="." title="Punto decimal">.</button>
+          <button class="calc-btn op" data-value="/" title="Dividir">÷</button>
+          <button class="calc-btn" id="calcEquals" title="Calcular resultado">=</button>
+
+          <!-- Fila 5: Paréntesis -->
+          <button class="calc-btn" data-value="(" title="Paréntesis izquierdo">(</button>
+          <button class="calc-btn" data-value=")" title="Paréntesis derecho">)</button>
+          <button class="calc-btn clear" id="calcClear" title="Limpiar">C</button>
+        </div>
+      </div>
     </div>
-    </div>
-
 
     <!-- Valores fijos debajo de barraTotal -->
     <div class="barra-info" role="status" aria-live="polite">
@@ -102,7 +122,6 @@
   </header>
 
   <main class="contenedor">
-    <!-- Único formulario tipo tabla (solo cuerpo) -->
     <form id="formUnico" class="tabla-formulario" autocomplete="off" aria-label="Validación por denominaciones">
       <div id="tablaDenominaciones" class="tabla-cuerpo">
         <!-- Filas generadas dinámicamente por JS -->
@@ -119,6 +138,8 @@
   <script type="module" src="JsMain.js"></script>
 </body>
 </html>
+
+
 
 
 
