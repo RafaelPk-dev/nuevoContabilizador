@@ -1,105 +1,126 @@
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Contabilidad móvil</title>
-    <link rel="stylesheet" href="estilosCont.css" />
-    </head>
-    <body id="contabilidad">
-    <header class="encabezado">
-        <h1>Contabilidad de fajos</h1>
-        
+            <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contabilidad móvil</title>
+  <link rel="stylesheet" href="estilosCont.css" />
+</head>
+<body id="contabilidad">
+  <header class="encabezado">
+    <h1>Contabilidad de fajos</h1>
 
-        <!-- Cantidad total fija -->
-        <div class="barra-total">
-        <form id="formCantidad" class="form-cantidad" autocomplete="off">
-            <label for="cantTotal" class="label">Cantidad total a contabilizar</label>
-            <div class="grupo-input">
-            <input
-                id="cantTotal"
-                name="cantTotal"
-                type="number"
-                min="0"
-                step="1"
-                inputmode="numeric"
-                placeholder="Ej: 2358"
-                class="input numero-grande"
-                required
-            />
-            <button type="submit" class="btn btn-primario">Calcular</button>
-            <!-- Botón para desplegar calculadora -->
-            <button type="button" id="btnCalc" class="btn btn-secundario">🧮</button>
-            </div>
-        </form>
+    <!-- Cantidad total fija -->
+    <div class="barra-total">
+      <form id="formCantidad" class="form-cantidad" autocomplete="off">
+        <label for="cantTotal" class="label">Cantidad total a contabilizar</label>
+        <div class="grupo-input">
+          <input
+            id="cantTotal"
+            name="cantTotal"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9' ]*"
+            placeholder="Ej: 1'234'567"
+            title="Ingresa la cantidad total; se formatea con comillas de millar"
+            class="input numero-grande"
+            required
+          />
+
+          <!-- Botón limpiar -->
+          <button id="btnLimpiar" type="button" class="btn btn-secundario" title="Limpiar formulario">Limpiar</button>
+
+          <!-- Botón validar corregido: type="button" -->
+          <button id="btnValidar" type="button" class="btn btn-primario" title="Validar aportes">Validar</button>
+
+          <!-- Botón calcular -->
+          <button type="submit" class="btn btn-primario">Calcular</button>
+
+          <!-- Botón calculadora -->
+          <button type="button" id="btnCalc" class="btn btn-secundario" title="Abrir calculadora">🧮</button>
+        </div>
+      </form>
 
         <!-- Calculadora simple oculta por defecto -->
-        <div id="calcContainer" class="calc-container oculto">
-            <input type="text" id="calcDisplay" class="calc-display" readonly />
-            <div class="calc-buttons">
-            <button class="calc-btn" data-value="7">7</button>
-            <button class="calc-btn" data-value="8">8</button>
-            <button class="calc-btn" data-value="9">9</button>
-            <button class="calc-btn op" data-value="+">+</button>
+    <div id="calcContainer" class="calc-container oculto" aria-expanded="false" aria-label="Calculadora básica">
+    <label for="calcDisplay" class="label" style="display:none;">Resultado de la calculadora</label>
+    <input
+        type="text"
+        id="calcDisplay"
+        class="calc-display"
+        readonly
+        placeholder="Resultado"
+        title="Resultado de las operaciones"
+        aria-live="polite"
+    />
+    <div class="calc-buttons" role="group" aria-label="Teclas de calculadora">
+        <!-- Fila 1 -->
+        <button class="calc-btn" data-value="7" title="7">7</button>
+        <button class="calc-btn" data-value="8" title="8">8</button>
+        <button class="calc-btn" data-value="9" title="9">9</button>
+        <button class="calc-btn op" data-value="+" title="Sumar">+</button>
 
-            <button class="calc-btn" data-value="4">4</button>
-            <button class="calc-btn" data-value="5">5</button>
-            <button class="calc-btn" data-value="6">6</button>
-            <button class="calc-btn op" data-value="-">-</button>
+        <!-- Fila 2 -->
+        <button class="calc-btn" data-value="4" title="4">4</button>
+        <button class="calc-btn" data-value="5" title="5">5</button>
+        <button class="calc-btn" data-value="6" title="6">6</button>
+        <button class="calc-btn op" data-value="-" title="Restar">-</button>
 
-            <button class="calc-btn" data-value="1">1</button>
-            <button class="calc-btn" data-value="2">2</button>
-            <button class="calc-btn" data-value="3">3</button>
-            <button class="calc-btn op" data-value="*">×</button>
+        <!-- Fila 3 -->
+        <button class="calc-btn" data-value="1" title="1">1</button>
+        <button class="calc-btn" data-value="2" title="2">2</button>
+        <button class="calc-btn" data-value="3" title="3">3</button>
+        <button class="calc-btn op" data-value="*" title="Multiplicar">×</button>
 
-            <button class="calc-btn" data-value="0">0</button>
-            <button class="calc-btn" data-value=".">.</button>
-            <button class="calc-btn op" data-value="/">÷</button>
-            <button class="calc-btn" id="calcEquals">=</button>
+        <!-- Fila 4 -->
+        <button class="calc-btn" data-value="0" title="0">0</button>
+        <button class="calc-btn" data-value="." title="Punto decimal">.</button>
+        <button class="calc-btn op" data-value="/" title="Dividir">÷</button>
+        <button class="calc-btn" id="calcEquals" title="Calcular resultado">=</button>
 
-            <button class="calc-btn clear" id="calcClear">C</button>
-            </div>
-        </div>
-        </div>
+        <!-- Fila 5: Paréntesis -->
+        <button class="calc-btn" data-value="(" title="Paréntesis izquierdo">(</button>
+        <button class="calc-btn" data-value=")" title="Paréntesis derecho">)</button>
+        <button class="calc-btn clear" id="calcClear" title="Limpiar">C</button>
+       
+    </div>
+    </div>
 
-        <!-- Valores fijos debajo de barraTotal -->
-        <div class="barra-info">
-        <div id="infoAportado">Aportado manual: $0</div>
-        <div id="infoFaltante">Faltante: $0</div>
-        </div>
 
-        <!-- Encabezados de tabla fijados dentro del header -->
-        <div class="tabla-encabezado-fixed">
-        <div class="th">Denominaciones</div>
-        <div class="th">Faltante</div>
-        <div class="th">Validación manual</div>
-        </div>
-    </header>
+    <!-- Valores fijos debajo de barraTotal -->
+    <div class="barra-info" role="status" aria-live="polite">
+      <div id="infoAportado" title="Total aportado manual">Aportado manual: $0</div>
+      <div id="infoFaltante" title="Dinero faltante">Faltante: $0</div>
+    </div>
 
-    <main class="contenedor">
-        <!-- Único formulario tipo tabla (solo cuerpo, sin encabezado) -->
-        <form id="formUnico" class="tabla-formulario" autocomplete="off">
-        <div id="tablaDenominaciones" class="tabla-cuerpo">
-            <!-- Filas generadas dinámicamente por JS -->
-        </div>
+    <!-- Encabezados de tabla fijados dentro del header -->
+    <div class="tabla-encabezado-fixed" aria-hidden="true">
+      <div class="th">Denominaciones</div>
+      <div class="th">Faltante</div>
+      <div class="th">Validación manual</div>
+    </div>
+  </header>
 
-        <div class="tabla-pie">
-            
-            <button id="btnValidar" type="submit" class="btn btn-primario">Validar</button>
-            <button id="btnLimpiar" type="button" class="btn btn-secundario">Limpiar</button>
-        </div>
-        </form>
+  <main class="contenedor">
+    <!-- Único formulario tipo tabla (solo cuerpo) -->
+    <form id="formUnico" class="tabla-formulario" autocomplete="off" aria-label="Validación por denominaciones">
+      <div id="tablaDenominaciones" class="tabla-cuerpo">
+        <!-- Filas generadas dinámicamente por JS -->
+      </div>
+    </form>
 
-        <section id="contenedorNotificaciones" class="notificaciones"></section>
-    </main>
+    <section id="contenedorNotificaciones" class="notificaciones" aria-live="polite" aria-atomic="true"></section>
+  </main>
 
-    <footer class="pie">
-        <small>Para Carlos, el Salvaje.</small>
-    </footer>
+  <footer class="pie">
+    <small>Hecho con claridad y propósito.</small>
+  </footer>
 
-    <script type="module" src="JsMain.js"></script>
-    </body>
-    </html>
+  <script type="module" src="JsMain.js"></script>
+</body>
+</html>
+
+
 
 
 

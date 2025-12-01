@@ -60,6 +60,7 @@
 
     /* Botones */
     .btn {
+    width: 80px;
     padding: 0.7rem 1rem;
     border-radius: 8px;
     font-weight: 600;
@@ -104,6 +105,28 @@
     border-radius: 10px;
     overflow: hidden;
     }
+
+    /* Encabezado fijo completo */
+    .encabezado {
+    position: fixed;   /* antes sticky */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    background: #12161b;
+    padding: 0.75rem 1rem 0.5rem;
+    border-bottom: 1px solid var(--borde);
+    }
+    .encabezado h1 { margin: 0; font-size: 1.6rem; letter-spacing: 0.2px; }
+    .subtitulo { margin: 0; color: var(--texto-sec); font-size: 1rem; }
+
+    /* Ajuste para que el contenido no quede tapado */
+    .contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10rem 1rem 1.25rem; /* espacio arriba para compensar header fijo */
+    }
+
     .tabla-encabezado-fixed .th {
     background: #13171d;
     color: var(--texto-sec);
@@ -125,11 +148,14 @@
 
     /* Tabla (solo cuerpo, sin encabezado) */
     .tabla-formulario {
+    position: relative;
+    top: 35vh;
     display: flex;
     flex-direction: column;
     background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 12px;
+    
     overflow-x: auto;
     transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
     margin-top: 0.6rem;
@@ -323,6 +349,7 @@
     /* Calculadora simple */
     .calc-container {
     margin-top: 0.5rem;
+    margin-left: 15vw;
     background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 10px;
