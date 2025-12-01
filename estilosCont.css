@@ -31,41 +31,36 @@
     .encabezado h1 { margin: 0; font-size: 1.6rem; letter-spacing: 0.2px; }
     .subtitulo { margin: 0; color: var(--texto-sec); font-size: 1rem; }
 
-
-        .menu-moneda {
-  margin-top: 0.5rem;
+/* Menú de monedas como bottom sheet */
+.menu-moneda {
+  position: fixed;
+  left: 0; right: 0;
+  bottom: -100%;
   background: var(--panel);
-  border: 1px solid var(--borde);
+  border-top: 2px solid var(--borde);
+  border-radius: 12px 12px 0 0;
+  padding: 1rem;
+  z-index: 500;
+  box-shadow: 0 -8px 24px rgba(0,0,0,0.1);
+  transition: bottom 0.35s ease;
+}
+.menu-moneda.activa { bottom: 0; }
+
+.select-moneda, .input-moneda {
+  width: 100%;
+  padding: 0.6rem;
   border-radius: 8px;
-  padding: 0.75rem;
-  max-width: 220px;
-}
-
-.menu-moneda.oculto {
-  display: none;
-}
-
-.select-moneda {
-  width: 100%;
-  padding: 0.4rem;
-  border-radius: 6px;
   border: 1px solid var(--borde);
-  background: #0c0f13;
-  color: var(--texto);
+  margin-bottom: 0.75rem;
   font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.input-moneda {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid var(--borde);
-  background: #0c0f13;
+  background: var(--neutral);
   color: var(--texto);
-  font-size: 1.1rem;
 }
 
+.menu-moneda-acciones {
+  display: flex;
+  justify-content: flex-end;
+}
 
 
     /* Formulario cantidad total */
@@ -382,58 +377,67 @@
     .input-fajo, .input-suelto { max-width: 150px; }
     }
 
+/* Overlay blur */
+.overlay-blur {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.2);
+  z-index: 400;
+  transition: opacity 0.3s ease;
+}
+.overlay-blur.oculto {
+  opacity: 0;
+  pointer-events: none;
+}
 
-    /* Calculadora simple */
-    .calc-container {
-    margin-top: 0.5rem;
-    margin-left: 15vw;
-    background: var(--panel);
-    border: 1px solid var(--borde);
-    border-radius: 10px;
-    padding: 0.75rem;
-    max-width: 260px;
-    }
-    .calc-container.oculto { display: none; }
+/* Calculadora bottom (sheet) */
+.calc-container {
+  position: fixed;
+  left: 0; right: 0;
+  bottom: -100%;
+  background: var(--panel);
+  border-top: 2px solid var(--borde);
+  border-radius: 12px 12px 0 0;
+  padding: 1rem;
+  z-index: 500;
+  box-shadow: 0 -8px 24px rgba(0,0,0,0.1);
+  transition: bottom 0.35s ease;
+}
+.calc-container.activa { bottom: 0; }
 
-    .calc-display {
-    width: 100%;
-    background: #0c0f13;
-    border: 1px solid var(--borde);
-    color: var(--texto);
-    font-size: 1.4rem;
-    padding: 0.5rem;
-    border-radius: 8px;
-    margin-bottom: 0.6rem;
-    text-align: right;
-    }
+.calc-display {
+  width: 100%;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  text-align: right;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  background: var(--neutral);
+  color: var(--texto);
+}
 
-    .calc-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.4rem;
-    }
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
 
-    .calc-btn {
-    background: #1c2129;
-    border: 1px solid var(--borde);
-    color: var(--texto);
-    font-size: 1.2rem;
-    padding: 0.6rem;
-    border-radius: 6px;
-    cursor: pointer;
-    }
-    .calc-btn:hover { background: var(--primario-oscuro); }
-    .calc-btn.op { background: #2a2f38; }
-    .calc-btn.clear { grid-column: span 4; background: #8b0000; color: #fff; }
-
-    .calc-btn.close {
-    grid-column: span 4;
-    background: #39414d;
-    color: #fff;
-    }
-    .calc-btn.close:hover {
-    background: #2a2f38;
-    }
+.calc-btn {
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  background: var(--secundario); /* rosa pastel */
+  color: var(--texto);
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+.calc-btn:hover {
+  background: var(--primario); /* azul pastel al hover */
+  transform: translateY(-2px);
+}
 
 
 

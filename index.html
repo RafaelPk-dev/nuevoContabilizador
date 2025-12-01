@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contabilidad móvil</title>
+  <title>Contabilidad de fajos</title>
   <link rel="stylesheet" href="estilosCont.css" />
 </head>
 <body id="contabilidad">
   <header class="encabezado">
     <h1>Contabilidad de fajos</h1>
 
-    <!-- Cantidad total fija -->
     <div class="barra-total">
       <form id="formCantidad" class="form-cantidad" autocomplete="off">
         <label for="cantTotal" class="label">Cantidad total a contabilizar</label>
@@ -22,116 +21,100 @@
             inputmode="numeric"
             pattern="[0-9' ]*"
             placeholder="Ej: 1'234'567"
-            title="Ingresa la cantidad total en pesos cubanos"
             class="input numero-grande"
             required
           />
 
-          <!-- Botón limpiar -->
-          <button id="btnLimpiar" type="button" class="btn btn-secundario" title="Limpiar formulario">Limpiar</button>
-
-          <!-- Botón validar -->
-          <button id="btnValidar" type="button" class="btn btn-primario" title="Validar aportes">Validar</button>
-
-          <!-- Botón calcular -->
+          <button id="btnLimpiar" type="button" class="btn btn-secundario">Limpiar</button>
+          <button id="btnValidar" type="button" class="btn btn-primario">Validar</button>
           <button type="submit" class="btn btn-primario">Calcular</button>
 
-          <!-- Botón calculadora -->
+          <!-- Botón calculadora (bottom sheet) -->
           <button type="button" id="btnCalc" class="btn btn-secundario" title="Abrir calculadora">🧮</button>
 
-          <!-- Botón menú de monedas -->
-          <button type="button" id="btnMoneda" class="btn btn-secundario" title="Seleccionar moneda">💱</button>
+          <!-- Botón menú monedas -->
+          <button type="button" id="btnMoneda" class="btn btn-secundario" title="Conversión USD/EUR">💱</button>
         </div>
       </form>
 
-      <!-- Menú de monedas oculto -->
-      <div id="menuMoneda" class="menu-moneda oculto">
-        <label for="selectMoneda" class="label">Selecciona moneda</label>
-        <select id="selectMoneda" class="select-moneda">
-          <option value="USD">Dólar (×450)</option>
-          <option value="EUR">Euro (×500)</option>
-        </select>
 
-        <label for="inputMoneda" class="label">Cantidad en moneda seleccionada</label>
-        <input
-          id="inputMoneda"
-          type="number"
-          min="0"
-          placeholder="Ej: 100"
-          class="input-moneda"
-        />
-      </div>
+<!-- Overlay blur compartido -->
+<div id="overlayBlur" class="overlay-blur oculto" aria-hidden="true"></div>
 
-      <!-- Calculadora simple oculta por defecto -->
-      <div id="calcContainer" class="calc-container oculto" aria-expanded="false" aria-label="Calculadora básica">
-        <label for="calcDisplay" class="label" style="display:none;">Resultado de la calculadora</label>
-        <input
-          type="text"
-          id="calcDisplay"
-          class="calc-display"
-          readonly
-          placeholder="Resultado"
-          title="Resultado de las operaciones"
-          aria-live="polite"
-        />
-        <div class="calc-buttons" role="group" aria-label="Teclas de calculadora">
-          <!-- Fila 1 -->
-          <button class="calc-btn" data-value="7" title="7">7</button>
-          <button class="calc-btn" data-value="8" title="8">8</button>
-          <button class="calc-btn" data-value="9" title="9">9</button>
-          <button class="calc-btn op" data-value="+" title="Sumar">+</button>
+<!-- Menú de monedas como bottom sheet -->
+<div id="menuMoneda" class="menu-moneda oculto" aria-expanded="false" aria-label="Conversor de moneda">
+  <label for="selectMoneda" class="label">Selecciona moneda</label>
+  <select id="selectMoneda" class="select-moneda">
+    <option value="USD">Dólar (×450)</option>
+    <option value="EUR">Euro (×500)</option>
+  </select>
 
-          <!-- Fila 2 -->
-          <button class="calc-btn" data-value="4" title="4">4</button>
-          <button class="calc-btn" data-value="5" title="5">5</button>
-          <button class="calc-btn" data-value="6" title="6">6</button>
-          <button class="calc-btn op" data-value="-" title="Restar">-</button>
+  <label for="inputMoneda" class="label">Cantidad en moneda seleccionada</label>
+  <input id="inputMoneda" type="number" min="0" placeholder="Ej: 100" class="input-moneda" />
 
-          <!-- Fila 3 -->
-          <button class="calc-btn" data-value="1" title="1">1</button>
-          <button class="calc-btn" data-value="2" title="2">2</button>
-          <button class="calc-btn" data-value="3" title="3">3</button>
-          <button class="calc-btn op" data-value="*" title="Multiplicar">×</button>
+  <div class="menu-moneda-acciones">
+    <button id="monedaClose" class="btn btn-secundario">Cerrar</button>
+  </div>
+</div>
 
-          <!-- Fila 4 -->
-          <button class="calc-btn" data-value="0" title="0">0</button>
-          <button class="calc-btn" data-value="." title="Punto decimal">.</button>
-          <button class="calc-btn op" data-value="/" title="Dividir">÷</button>
-          <button class="calc-btn" id="calcEquals" title="Calcular resultado">=</button>
 
-          <!-- Fila 5: Paréntesis -->
-          <button class="calc-btn" data-value="(" title="Paréntesis izquierdo">(</button>
-          <button class="calc-btn" data-value=")" title="Paréntesis derecho">)</button>
-          <button class="calc-btn clear" id="calcClear" title="Limpiar">C</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Valores fijos debajo de barraTotal -->
     <div class="barra-info" role="status" aria-live="polite">
-      <div id="infoAportado" title="Total aportado manual">Aportado manual: $0</div>
-      <div id="infoFaltante" title="Dinero faltante">Faltante: $0</div>
-    </div>
-
-    <!-- Encabezados de tabla fijados dentro del header -->
-    <div class="tabla-encabezado-fixed" aria-hidden="true">
-      <div class="th">Denominaciones</div>
-      <div class="th">Faltante</div>
-      <div class="th">Validación manual</div>
+      <div id="infoAportado">Aportado manual: $0</div>
+      <div id="infoFaltante">Faltante: $0</div>
     </div>
   </header>
 
   <main class="contenedor">
-    <form id="formUnico" class="tabla-formulario" autocomplete="off" aria-label="Validación por denominaciones">
-      <div id="tablaDenominaciones" class="tabla-cuerpo">
-        <!-- Filas generadas dinámicamente por JS -->
-      </div>
+    <!-- Formulario oculto hasta calcular -->
+    <form id="formUnico" class="tabla-formulario oculto" autocomplete="off" aria-label="Validación por denominaciones">
+      <div id="tablaDenominaciones" class="tabla-cuerpo"></div>
     </form>
 
     <section id="contenedorNotificaciones" class="notificaciones" aria-live="polite" aria-atomic="true"></section>
   </main>
 
-  <footer class="pie">
+  
+
+  <!-- Overlay blur para superposición -->
+  <div id="overlayBlur" class="overlay-blur oculto" aria-hidden="true"></div>
+
+  <!-- Calculadora en bottom (sheet) -->
+<div id="calcContainer" class="calc-container oculto" aria-expanded="false" aria-label="Calculadora">
+  <input type="text" id="calcDisplay" class="calc-display" readonly placeholder="Resultado" aria-live="polite" />
+  <div class="calc-buttons" role="group" aria-label="Teclas de calculadora">
+    <!-- Fila 1 -->
+    <button class="calc-btn" data-value="7">7</button>
+    <button class="calc-btn" data-value="8">8</button>
+    <button class="calc-btn" data-value="9">9</button>
+    <button class="calc-btn" data-value="+">+</button>
+
+    <!-- Fila 2 -->
+    <button class="calc-btn" data-value="4">4</button>
+    <button class="calc-btn" data-value="5">5</button>
+    <button class="calc-btn" data-value="6">6</button>
+    <button class="calc-btn" data-value="-">-</button>
+
+    <!-- Fila 3 -->
+    <button class="calc-btn" data-value="1">1</button>
+    <button class="calc-btn" data-value="2">2</button>
+    <button class="calc-btn" data-value="3">3</button>
+    <button class="calc-btn" data-value="*">×</button>
+
+    <!-- Fila 4 -->
+    <button class="calc-btn" data-value="0">0</button>
+    <button class="calc-btn" data-value=".">.</button>
+    <button class="calc-btn" data-value="/">÷</button>
+    <button class="calc-btn" id="calcEquals">=</button>
+
+    <!-- Fila 5: paréntesis y control -->
+    <button class="calc-btn" data-value="(">(</button>
+    <button class="calc-btn" data-value=")">)</button>
+    <button class="calc-btn" id="calcClear">C</button>
+    <button class="calc-btn" id="calcClose">Cerrar</button>
+  </div>
+</div>
+
+<footer class="pie">
     <small>Hecho con claridad y propósito.</small>
   </footer>
 
