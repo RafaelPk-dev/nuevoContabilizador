@@ -8,11 +8,11 @@
 </head>
 <body id="contabilidad">
   <header class="encabezado">
-    <h1>Contabilidad de fajos</h1>
+    
 
     <div class="barra-total">
       <form id="formCantidad" class="form-cantidad" autocomplete="off">
-        <label for="cantTotal" class="label">Cantidad total a contabilizar</label>
+        
         <div class="grupo-input">
           <input
             id="cantTotal"
@@ -45,23 +45,28 @@
 <div id="menuMoneda" class="menu-moneda oculto" aria-expanded="false" aria-label="Conversor de moneda">
   <label for="selectMoneda" class="label">Selecciona moneda</label>
   <select id="selectMoneda" class="select-moneda">
-    <option value="USD">Dólar (×450)</option>
-    <option value="EUR">Euro (×500)</option>
+    <option value="USD">Dólar</option>
+    <option value="EUR">Euro</option>
   </select>
 
   <label for="inputMoneda" class="label">Cantidad en moneda seleccionada</label>
   <input id="inputMoneda" type="number" min="0" placeholder="Ej: 100" class="input-moneda" />
 
-  <div class="menu-moneda-acciones">
-    <button id="monedaClose" class="btn btn-secundario">Cerrar</button>
-  </div>
+
+  <!-- NUEVO: Configuración de tasa -->
+  <div class="menu-moneda-config">
+  <label for="inputTasa" class="label">Tasa de cambio</label>
+  <input id="inputTasa" type="number" min="1" placeholder="Ej: 450" class="input-tasa" />
+  <button id="btnGuardarTasa" class="btn btn-primario">Guardar tasa</button>
+
+  <!-- NUEVO: resultado inverso -->
+  <span id="resultadoInverso" class="resultado-inverso">Equivalente: -</span>
+
+
 </div>
 
-
-    <div class="barra-info" role="status" aria-live="polite">
-      <div id="infoAportado">Aportado manual: $0</div>
-      <div id="infoFaltante">Faltante: $0</div>
-    </div>
+  
+  
   </header>
 
   <main class="contenedor">
@@ -110,6 +115,7 @@
     <button class="calc-btn" data-value="(">(</button>
     <button class="calc-btn" data-value=")">)</button>
     <button class="calc-btn" id="calcClear">C</button>
+    <button id="calcBackspace" class="calc-btn" data-value="⌫">⌫</button>
     <button class="calc-btn" id="calcClose">Cerrar</button>
   </div>
 </div>

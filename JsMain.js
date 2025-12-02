@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnValidar = document.getElementById('btnValidar');
 
   // Monedas
-  const btnMoneda = document.getElementById('btnMoneda');
-  const menuMoneda = document.getElementById('menuMoneda');
   const selectMoneda = document.getElementById('selectMoneda');
   const inputMoneda = document.getElementById('inputMoneda');
 
@@ -43,15 +41,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // Formateo de millares con comillas en #cantTotal
   initFormateoMillares(inputCantidad);
 
-  // Conversión USD/EUR -> cantTotal
+  // Función para obtener tasa guardada o por defecto
+  function obtenerTasa(moneda) {
+    const guardada = localStorage.getItem(`tasa_${moneda}`);
+    if (guardada && Number(guardada) > 0) {
+      return Number(guardada);
+    }
+    return moneda === 'USD' ? 450 : 500; // valores por defecto
+  }
+
+  // Conversión USD/EUR -> cantTotal usando tasa guardada
   function aplicarConversionMoneda() {
     if (!inputMoneda || !selectMoneda || !inputCantidad) return;
     const cantidadMoneda = parseFloat(String(inputMoneda.value).replace(',', '.'));
     if (!Number.isFinite(cantidadMoneda) || cantidadMoneda <= 0) return;
-    const tasa = selectMoneda.value === 'USD' ? 450 : 500;
+
+    const tasa = obtenerTasa(selectMoneda.value); // ✅ ahora lee localStorage
     const convertido = Math.floor(cantidadMoneda * tasa);
+
     inputCantidad.value = Number(convertido).toLocaleString('es-ES').replace(/\./g, "'");
   }
+
   if (selectMoneda) selectMoneda.addEventListener('change', aplicarConversionMoneda);
   if (inputMoneda) inputMoneda.addEventListener('input', aplicarConversionMoneda);
 
@@ -105,6 +115,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  document.addEventListener('DOMContentLoaded', () => {
+  // ...todo tu código actual...
+
+  // ✅ Conversión inversa: pesos -> moneda
+  function obtenerTasa(moneda) {
+    const guardada = localStorage.getItem(`tasa_${moneda}`);
+    if (guardada && Number(guardada) > 0) return Number(guardada);
+    return moneda === 'USD' ? 450 : 500;
+  }
+
+  function actualizarConversionInversa() {
+    const resultadoInverso = document.getElementById('resultadoInverso');
+    if (!resultadoInverso || !inputCantidad) return;
+    const valorPesos = parseCantidadFormateada(inputCantidad.value);
+    if (!Number.isFinite(valorPesos) || valorPesos <= 0) {
+      resultadoInverso.textContent = "Equivalente: -";
+      return;
+    }
+    const tasa = obtenerTasa(selectMoneda.value);
+    const convertido = (valorPesos / tasa).toFixed(2);
+    resultadoInverso.textContent = `Equivalente: ${convertido} ${selectMoneda.value}`;
+  }
+
+  // ✅ Escuchar cambios en cantTotal
+  inputCantidad.addEventListener('input', actualizarConversionInversa);
+});
+
+
   // Limpiar
   if (btnLimpiar) {
     btnLimpiar.addEventListener('click', () => {
@@ -118,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
 
 
 

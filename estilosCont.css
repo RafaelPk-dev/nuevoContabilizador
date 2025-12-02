@@ -268,8 +268,12 @@
     color: var(--texto);
     padding: 0.6rem 0.75rem;
     border-radius: 8px;
+    text-decoration: dashed;
     outline: none;
     width: 100%;
+    font-family: 'Times New Roman', serif;
+    
+    
     max-width: 170px;
     text-align: center;
     font-size: 1.3rem; /* números grandes */
@@ -374,7 +378,13 @@
     .fila { grid-template-columns: 1.4fr 1fr 1fr; }
     .encabezado h1 { font-size: 1.4rem; }
     .barra-info div { font-size: 1.15rem; }
-    .input-fajo, .input-suelto { max-width: 150px; }
+    .input-fajo, .input-suelto { 
+    font-family: 'Times New Roman', Times, serif; /* ✅ monoespaciado */
+    letter-spacing: 2px;                   /* ✅ separación entre dígitos */
+    font-size: 2rem;                      /* ✅ más grandes */
+    padding: 0.4rem 0.6rem;
+    max-width: 150px; 
+    }
     }
 
 /* Overlay blur */
@@ -438,6 +448,37 @@
   background: var(--primario); /* azul pastel al hover */
   transform: translateY(-2px);
 }
+
+.menu-moneda-config {
+  margin-top: 1rem;
+  background: var(--neutral);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.input-tasa {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  font-size: 1rem;
+  background: #2b2e38;   /* fondo oscuro */
+  color: #f7f8fb;        /* texto claro */
+}
+
+.resultado-inverso {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: var(--primario); /* azul pastel para destacar */
+  background: rgba(0,0,0,0.05);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+}
+
 
 
 
