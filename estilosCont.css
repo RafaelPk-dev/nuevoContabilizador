@@ -112,6 +112,30 @@
     gap: 1rem;
     margin-top: 0.4rem;
     }
+
+    .header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--panel);
+  padding: 0.6rem 1rem;
+  border-bottom: 2px solid var(--borde);
+}
+
+.info-aportado {
+  height: 30px;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--primario); /* azul pastel */
+}
+
+.info-faltante {
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--error); /* rojo pastel */
+}
+
+
     .barra-info div {
     background: #0c0f13;
     border: 1px solid var(--borde);
@@ -379,9 +403,10 @@
     .encabezado h1 { font-size: 1.4rem; }
     .barra-info div { font-size: 1.15rem; }
     .input-fajo, .input-suelto { 
-    font-family: 'Times New Roman', Times, serif; /* ✅ monoespaciado */
-    letter-spacing: 2px;                   /* ✅ separación entre dígitos */
-    font-size: 2rem;                      /* ✅ más grandes */
+    font-family: 'Times New Roman', Times, serif; 
+    font-weight: 700;
+    letter-spacing: 2px;                   
+    font-size: 2rem;                      
     padding: 0.4rem 0.6rem;
     max-width: 150px; 
     }

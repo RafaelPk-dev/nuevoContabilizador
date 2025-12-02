@@ -57,7 +57,14 @@
     }
 
     /* Actualización en tiempo real */
-    export function actualizarTabla(contenedorTabla, totalObjetivo, necesarioInicial, nodoResumenManual, nodoTablaFormulario, contenedorNotificaciones) {
+    export function actualizarTabla(
+    contenedorTabla,
+    totalObjetivo,
+    necesarioInicial,
+    nodoResumenManual,
+    nodoTablaFormulario,
+    contenedorNotificaciones
+    ) {
     const filas = contenedorTabla.querySelectorAll('.fila');
     let totalManual = 0;
 
@@ -68,14 +75,19 @@
         totalManual += (fajos * 100 + sueltos) * denom;
     });
 
+  // ✅ Actualizar bloque header
     const infoAportado = document.getElementById('infoAportado');
-    if (infoAportado) infoAportado.textContent = `Aportado manual: ${formatearMoneda(totalManual)}`;
+    if (infoAportado) {
+        infoAportado.textContent = `Aportado manual: ${formatearMoneda(totalManual)}`;
+    }
 
     if (Number.isFinite(totalObjetivo) && totalObjetivo > 0) {
         const dineroFaltante = totalObjetivo - totalManual;
 
         let desgloseFaltante = [];
-        if (dineroFaltante > 0) desgloseFaltante = calcularDesgloseIndependiente(dineroFaltante);
+        if (dineroFaltante > 0) {
+        desgloseFaltante = calcularDesgloseIndependiente(dineroFaltante);
+        }
 
         const faltMap = new Map();
         desgloseFaltante.forEach(it => faltMap.set(Number(it.denominacion), it));
@@ -87,13 +99,19 @@
         fila.querySelector('.input-faltante-sueltos').value = it.sueltos ? String(it.sueltos) : "";
         });
 
+        // ✅ Actualizar bloque header faltante
         const infoFaltante = document.getElementById('infoFaltante');
         if (infoFaltante) {
-        if (dineroFaltante > 0) infoFaltante.textContent = `Faltante: ${formatearMoneda(dineroFaltante)}`;
-        else if (dineroFaltante === 0) infoFaltante.textContent = `Faltante: $0 (Meta alcanzada)`;
-        else infoFaltante.textContent = `Excedido en: ${formatearMoneda(Math.abs(dineroFaltante))}`;
+        if (dineroFaltante > 0) {
+            infoFaltante.textContent = `Faltante: ${formatearMoneda(dineroFaltante)}`;
+        } else if (dineroFaltante === 0) {
+            infoFaltante.textContent = `Faltante: $0 (Meta alcanzada)`;
+        } else {
+            infoFaltante.textContent = `Excedido en: ${formatearMoneda(Math.abs(dineroFaltante))}`;
+        }
         }
 
+        // Notificaciones visuales
         Array.from(contenedorNotificaciones.querySelectorAll('.toast')).forEach(t => t.remove());
         if (dineroFaltante > 0) {
         mostrarNotificacion(contenedorNotificaciones, 'info', `Falta por validar: ${formatearMoneda(dineroFaltante)}`, 1200);
@@ -112,7 +130,9 @@
         });
         }
     }
-    }
+}
+
+    
 
     /* Filtrar filas vacías */
     export function filtrarFilasIngresadas(contenedorTabla) {
