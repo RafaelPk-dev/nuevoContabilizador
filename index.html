@@ -37,12 +37,14 @@
         </div>
       </form>
 
-<div id="infoAportado" class="info-aportado">Aportado manual: $0</div>
-  <div id="infoFaltante" class="info-faltante">Faltante: $0</div>  
-  
-<!-- Overlay blur compartido -->
-<div id="overlayBlur" class="overlay-blur oculto" aria-hidden="true"></div>
-
+      
+      <form class="form-cantidad" autocomplete="off">
+          <div id="infoAportado" class="info-aportado">Aportado: $0</div>
+          <div id="infoFaltante" class="info-faltante">Faltante: $0</div>  
+        
+          <!-- Overlay blur compartido -->
+          <div id="overlayBlur" class="overlay-blur oculto" aria-hidden="true"></div>
+      </form>
 <!-- Menú de monedas como bottom sheet -->
 <div id="menuMoneda" class="menu-moneda oculto" aria-expanded="false" aria-label="Conversor de moneda">
   <label for="selectMoneda" class="label">Selecciona moneda</label>
@@ -59,7 +61,7 @@
   <div class="menu-moneda-config">
   <label for="inputTasa" class="label">Tasa de cambio</label>
   <input id="inputTasa" type="number" min="1" placeholder="Ej: 450" class="input-tasa" />
-  <button id="btnGuardarTasa" class="btn btn-primario">Guardar tasa</button>
+  <button id="btnGuardarTasa" class="btn btn-primario">Guardar</button>
 
   <!-- NUEVO: resultado inverso -->
   <span id="resultadoInverso" class="resultado-inverso">Equivalente: -</span>
@@ -86,6 +88,9 @@
 
   <!-- Calculadora en bottom (sheet) -->
 <div id="calcContainer" class="calc-container oculto" aria-expanded="false" aria-label="Calculadora">
+    
+    <span id="calcResult" class="calc-result" aria-live="polite">0</span>
+    
   <input type="text" id="calcDisplay" class="calc-display" readonly placeholder="Resultado" aria-live="polite" />
   <div class="calc-buttons" role="group" aria-label="Teclas de calculadora">
     <!-- Fila 1 -->
@@ -122,7 +127,7 @@
 </div>
 
 <footer class="pie">
-    <small>Hecho con claridad y propósito.</small>
+    <small>Hecho para Carlos, el Salvaje.</small>
   </footer>
 
   <script type="module" src="JsMain.js"></script>

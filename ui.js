@@ -18,8 +18,8 @@
         <div class="celda columna-denominacion">
             <div class="bloque-fajo">
             <div class="titulo">${emoji} $${denom}</div>
-            <div class="linea"><span>Fajos (100):</span><span class="valor denom-fajos">0</span></div>
-            <div class="linea"><span>Billetes sueltos:</span><span class="valor denom-sueltos">0</span></div>
+            <div class="linea"><span>Fajos:</span><span class="valor denom-fajos">0</span></div>
+            <div class="linea"><span>Billetes:</span><span class="valor denom-sueltos">0</span></div>
             </div>
         </div>
         <div class="celda columna-faltante">
@@ -78,7 +78,7 @@
   // ✅ Actualizar bloque header
     const infoAportado = document.getElementById('infoAportado');
     if (infoAportado) {
-        infoAportado.textContent = `Aportado manual: ${formatearMoneda(totalManual)}`;
+        infoAportado.textContent = `Aportado: ${formatearMoneda(totalManual)}`;
     }
 
     if (Number.isFinite(totalObjetivo) && totalObjetivo > 0) {
@@ -154,11 +154,12 @@
     }
 
     /* Calculadora: lógica y reflejo en cantTotal en tiempo real */
-    export function initCalculadora() {
+        export function initCalculadora() {
     const calcContainer = document.getElementById('calcContainer');
     const calcDisplay = document.getElementById('calcDisplay');
+    const calcResult = document.getElementById('calcResult'); // ✅ span principal
+    const inputCantidad = document.getElementById('cantTotal'); // ✅ input en el header
     const buttons = calcContainer?.querySelectorAll('.calc-btn') || [];
-    const inputCantidad = document.getElementById('cantTotal');
 
     let currentExpression = "";
 
@@ -172,10 +173,19 @@
         const subtotal = eval(currentExpression.replace(/×/g, '*').replace(/÷/g, '/'));
         if (!isNaN(subtotal)) {
             calcDisplay.value = `${currentExpression} = ${subtotal}`;
-            // Reflejar en cantTotal en tiempo real (formateado con comillas)
-            if (inputCantidad) inputCantidad.value = formatearComillasMillar(Math.floor(subtotal));
+
+            // ✅ Mostrar en el span principal
+            if (calcResult) {
+            calcResult.textContent = formatearComillasMillar(Math.floor(subtotal));
+            }
+
+            // ✅ Reflejar también en el header
+            if (inputCantidad) {
+            inputCantidad.value = formatearComillasMillar(Math.floor(subtotal));
+            }
         }
         } catch {
+        if (calcResult) calcResult.textContent = "...";
         calcDisplay.value = currentExpression;
         }
     }
@@ -186,10 +196,8 @@
 
         if (btn.id === "calcClear") {
             currentExpression = "";
-
-        }else if (btn.id === "calcBackspace") {
-      // ✅ nuevo: borrar último carácter
-        currentExpression = currentExpression.slice(0, -1);
+        } else if (btn.id === "calcBackspace") {
+            currentExpression = currentExpression.slice(0, -1);
         } else if (btn.id === "calcEquals") {
             try {
             currentExpression = eval(currentExpression.replace(/×/g, '*').replace(/÷/g, '/')).toString();
@@ -207,7 +215,8 @@
         actualizarDisplay();
         });
     });
-    }
+}
+
 
     /* UI de calculadora: overlay blur y toggle bottom sheet */
     export function bindCalculatorUI() {
